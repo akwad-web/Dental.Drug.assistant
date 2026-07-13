@@ -1,0 +1,38 @@
+MIT License
+
+Copyright (c) 2026 Dental Drug Decision Support
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------
+
+MEDICAL / CLINICAL DISCLAIMER
+
+This software provides clinical decision support ONLY. The drug information,
+doses, interactions and recommendations contained herein are compiled for
+reference and educational purposes and may not reflect the most current
+evidence, local formularies or individual patient factors.
+
+Nothing in this software constitutes medical advice, a diagnosis, or a
+prescription. The treating, qualified dental/medical professional is solely
+responsible for verifying all information against a current, authoritative
+formulary (e.g. the BNF) and for the final clinical decision and prescription.
+
+The authors and contributors accept NO liability for any harm, loss or damage
+arising from the use of, or reliance on, this software or its content.

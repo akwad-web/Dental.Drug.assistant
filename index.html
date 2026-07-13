@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="description" content="Bilingual (Arabic/English) dental pharmacology decision support system for dentists in Egypt. Offline PWA." />
+  <title>Dental Drug Decision Support</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-brand">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5.5c-2.2-2.6-6-2-6 2.1 0 4.6 1.5 6.9 2.6 9.2.7 1.5.9 3.7 1.4 3.7.7 0 .6-3.2 1.3-5.3.4-1.3.7-2.2 1.7-2.2s1.3.9 1.7 2.2c.7 2.1.6 5.3 1.3 5.3.5 0 .7-2.2 1.4-3.7C19.5 14.5 21 12.2 21 7.6c0-4.1-3.8-4.7-6-2.1-.8.9-1.2 1.6-1 1.6s-.2-.7-1-1.6z"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong data-i18n="app_name">Dental Drug Decision Support</strong>
+        <small data-i18n="app_subtitle">Professional Dental Pharmacology System</small>
+      </span>
+    </div>
+    <div class="topbar-controls">
+      <span class="net-status" id="netStatus" title="Connection status">
+        <span class="dot"></span><span data-i18n="general.online">Online</span>
+      </span>
+      <button class="btn-icon" id="installBtn" data-i18n-title="general.install" title="Install app" hidden>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+      </button>
+      <button class="btn-icon" id="themeToggle" data-i18n-title="general.theme" title="Toggle theme" aria-label="Toggle dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 109.8 9.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+      </button>
+      <button class="btn-lang" id="langToggle" aria-label="Switch language">
+        <span class="lang-label">عربي</span>
+      </button>
+      <button class="btn-icon nav-burger" id="navBurger" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <!-- ===================== SIDE NAV ===================== -->
+    <nav class="sidenav" id="sidenav" aria-label="Main navigation">
+      <button class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10"/></svg>
+        <span data-i18n="nav.dashboard">Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="patient">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span data-i18n="nav.patient">Patient Assessment</span>
+      </button>
+      <button class="nav-item" data-view="drugs">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 3.5l7 7a4.95 4.95 0 010 7l-3 3a4.95 4.95 0 01-7 0l-7-7M13 6l5 5"/></svg>
+        <span data-i18n="nav.drugs">Drug Database</span>
+      </button>
+      <button class="nav-item" data-view="calculators">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h8"/></svg>
+        <span data-i18n="nav.calculators">Calculators</span>
+      </button>
+      <button class="nav-item" data-view="interactions">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l-5 5a3.5 3.5 0 105 5l3-3M15 12l5-5a3.5 3.5 0 10-5-5l-3 3M8 16l8-8"/></svg>
+        <span data-i18n="nav.interactions">Interactions</span>
+      </button>
+      <button class="nav-item" data-view="guidelines">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg>
+        <span data-i18n="nav.guidelines">Guidelines</span>
+      </button>
+      <button class="nav-item" data-view="history">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span data-i18n="nav.history">History</span>
+      </button>
+      <button class="nav-item" data-view="admin">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span data-i18n="nav.admin">Admin</span>
+      </button>
+      <div class="sidenav-foot">
+        <span class="db-version" id="dbVersion"></span>
+      </div>
+    </nav>
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- ===================== MAIN ===================== -->
+    <main class="content" id="content">
+
+      <!-- ---------- DASHBOARD ---------- -->
+      <section class="view active" id="view-dashboard">
+        <div class="hero">
+          <h1 data-i18n="app_name">Dental Drug Decision Support</h1>
+          <p data-i18n="tagline">Bilingual clinical decision support for dentists in Egypt</p>
+          <div class="hero-search">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" id="globalSearch" data-i18n-ph="actions.search_placeholder" placeholder="Search drugs, trade names, conditions…" autocomplete="off" />
+          </div>
+          <div class="search-results" id="searchResults" hidden></div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="quick-cards">
+          <button class="quick-card" data-goto="patient">
+            <span class="qc-icon">🩺</span>
+            <strong data-i18n="nav.patient">Patient Assessment</strong>
+            <small data-i18n="results.based_on">Based on patient data</small>
+          </button>
+          <button class="quick-card" data-goto="calculators">
+            <span class="qc-icon">🧮</span>
+            <strong data-i18n="nav.calculators">Calculators</strong>
+            <small data-i18n="calc.pediatric_desc">Weight-based (mg/kg) dosing</small>
+          </button>
+          <button class="quick-card" data-goto="interactions">
+            <span class="qc-icon">⚠️</span>
+            <strong data-i18n="nav.interactions">Interactions</strong>
+            <small data-i18n="interactions_ui.desc">Check interactions</small>
+          </button>
+          <button class="quick-card" data-goto="guidelines">
+            <span class="qc-icon">📘</span>
+            <strong data-i18n="nav.guidelines">Guidelines</strong>
+            <small data-i18n="general.version">Version</small>
+          </button>
+        </div>
+
+        <div class="disclaimer-box" id="disclaimerBox">
+          <strong data-i18n="disclaimer.title">Clinical Disclaimer</strong>
+          <p data-i18n="disclaimer.body"></p>
+        </div>
+      </section>
+
+      <!-- ---------- PATIENT ASSESSMENT ---------- -->
+      <section class="view" id="view-patient">
+        <div class="view-head">
+          <h2 data-i18n="patient.title">Patient Assessment</h2>
+          <div class="view-head-actions">
+            <button class="btn ghost" id="btnNewPatient">＋ <span data-i18n="actions.new_patient">New patient</span></button>
+            <button class="btn primary" id="btnSavePatient"><span data-i18n="actions.save_patient">Save patient record</span></button>
+          </div>
+        </div>
+        <div class="patient-layout">
+          <form class="patient-form card" id="patientForm" autocomplete="off">
+            <div class="form-row">
+              <label class="field grow">
+                <span data-i18n="patient.name">Patient name</span>
+                <input type="text" id="pName" placeholder="—" />
+              </label>
+              <label class="field">
+                <span data-i18n="patient.gender">Gender</span>
+                <select id="pGender">
+                  <option value="">—</option>
+                  <option value="male" data-i18n="patient.male">Male</option>
+                  <option value="female" data-i18n="patient.female">Female</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label class="field">
+                <span data-i18n="patient.age">Age</span>
+                <input type="number" id="pAge" min="0" max="120" step="1" placeholder="0" />
+              </label>
+              <label class="field">
+                <span>&nbsp;</span>
+                <select id="pAgeUnit">
+                  <option value="years" data-i18n="patient.age_years">years</option>
+                  <option value="months" data-i18n="patient.age_months">months</option>
+                </select>
+              </label>
+              <label class="field grow">
+                <span data-i18n="patient.weight">Weight (kg)</span>
+                <input type="number" id="pWeight" min="0" max="300" step="0.1" placeholder="kg" />
+              </label>
+            </div>
+
+            <fieldset class="field-group" id="femaleOnly" hidden>
+              <legend data-i18n="patient.pregnant">Pregnant</legend>
+              <div class="form-row wrap">
+                <label class="check"><input type="checkbox" id="pPregnant" /> <span data-i18n="patient.pregnant">Pregnant</span></label>
+                <label class="field" id="trimesterField" hidden>
+                  <span data-i18n="patient.trimester">Trimester</span>
+                  <select id="pTrimester">
+                    <option value="1" data-i18n="patient.trimester1">1st</option>
+                    <option value="2" data-i18n="patient.trimester2">2nd</option>
+                    <option value="3" data-i18n="patient.trimester3">3rd</option>
+                  </select>
+                </label>
+                <label class="check"><input type="checkbox" id="pBreastfeeding" /> <span data-i18n="patient.breastfeeding">Breastfeeding</span></label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <span data-i18n="patient.diagnosis">Suspected diagnosis</span>
+              <select id="pDiagnosis"></select>
+            </div>
+
+            <div class="field">
+              <span data-i18n="patient.medical_conditions">Medical conditions</span>
+              <div class="chip-select" id="conditionChips"></div>
+            </div>
+
+            <div class="field">
+              <span data-i18n="patient.allergies">Drug allergies</span>
+              <div class="tag-input">
+                <input type="text" id="allergyInput" data-i18n-ph="patient.enter_allergy" placeholder="Type an allergy (e.g. penicillin)" />
+                <button type="button" class="btn small" id="addAllergyBtn" data-i18n="patient.add_allergy">Add</button>
+              </div>
+              <div class="tag-list" id="allergyTags"></div>
+              <div class="quick-allergies">
+                <small data-i18n="patient.allergies">Drug allergies</small>
+                <button type="button" class="mini-chip" data-allergy="penicillin">Penicillin</button>
+                <button type="button" class="mini-chip" data-allergy="nsaid">NSAIDs</button>
+                <button type="button" class="mini-chip" data-allergy="sulfonamide">Sulfonamide</button>
+                <button type="button" class="mini-chip" data-allergy="tetracycline">Tetracycline</button>
+                <button type="button" class="mini-chip" data-allergy="macrolide">Macrolide</button>
+                <button type="button" class="mini-chip" data-allergy="local anaesthetic">Local anaesthetic</button>
+                <button type="button" class="mini-chip" data-allergy="iodine">Iodine</button>
+                <button type="button" class="mini-chip" data-allergy="latex">Latex</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <span data-i18n="patient.current_meds">Current medications</span>
+              <div class="tag-input">
+                <input type="text" id="medInput" list="drugListDl" placeholder="e.g. warfarin, simvastatin" />
+                <button type="button" class="btn small" id="addMedBtn" data-i18n="patient.add_allergy">Add</button>
+              </div>
+              <div class="tag-list" id="medTags"></div>
+            </div>
+          </form>
+
+          <aside class="patient-summary">
+            <div class="card summary-card" id="patientSummary">
+              <h3 data-i18n="patient.title">Patient Assessment</h3>
+              <div id="summaryBody" class="summary-body muted" data-i18n="safety.no_patient">Enter patient data for personalised safety check</div>
+            </div>
+            <div class="card">
+              <h3 data-i18n="results.recommended">Recommended options</h3>
+              <div id="recommendBody" class="recommend-body"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ---------- DRUG DATABASE ---------- -->
+      <section class="view" id="view-drugs">
+        <div class="view-head">
+          <h2 data-i18n="nav.drugs">Drug Database</h2>
+        </div>
+        <div class="toolbar">
+          <div class="search-inline">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" id="drugSearch" data-i18n-ph="actions.search_placeholder" placeholder="Search drugs…" autocomplete="off" />
+          </div>
+          <select id="categoryFilter"></select>
+          <select id="safetyFilter">
+            <option value="" data-i18n="actions.filter">Filter</option>
+            <option value="safe" data-i18n="safety.safe">Suitable</option>
+            <option value="caution" data-i18n="safety.caution">Use with caution</option>
+            <option value="contraindicated" data-i18n="safety.contraindicated">Contraindicated</option>
+          </select>
+        </div>
+        <div class="drug-grid" id="drugGrid"></div>
+      </section>
+
+      <!-- ---------- CALCULATORS ---------- -->
+      <section class="view" id="view-calculators">
+        <div class="view-head"><h2 data-i18n="nav.calculators">Calculators</h2></div>
+        <div class="calc-tabs">
+          <button class="calc-tab active" data-calc="pediatric" data-i18n="calc.pediatric_title">Paediatric dose</button>
+          <button class="calc-tab" data-calc="la" data-i18n="calc.la_title">Local anaesthetic max</button>
+          <button class="calc-tab" data-calc="endo" data-i18n="calc.endo_title">Endocarditis prophylaxis</button>
+          <button class="calc-tab" data-calc="emergency" data-i18n="calc.emergency_title">Emergency drugs</button>
+        </div>
+
+        <div class="calc-panel active card" id="calc-pediatric">
+          <p class="muted" data-i18n="calc.pediatric_desc">Weight-based (mg/kg) dosing</p>
+          <div class="form-row wrap">
+            <label class="field grow">
+              <span data-i18n="calc.select_drug">Select drug</span>
+              <select id="pedDrug"></select>
+            </label>
+            <label class="field">
+              <span data-i18n="calc.weight">Weight (kg)</span>
+              <input type="number" id="pedWeight" min="0" step="0.1" placeholder="kg" />
+            </label>
+            <button class="btn primary align-end" id="pedCalcBtn" data-i18n="actions.calculate">Calculate</button>
+          </div>
+          <div class="calc-result" id="pedResult"></div>
+        </div>
+
+        <div class="calc-panel card" id="calc-la">
+          <p class="muted" data-i18n="calc.la_desc">Maximum recommended dose by weight</p>
+          <div class="form-row wrap">
+            <label class="field grow">
+              <span data-i18n="calc.select_la">Select local anaesthetic</span>
+              <select id="laSelect"></select>
+            </label>
+            <label class="field">
+              <span data-i18n="calc.weight">Weight (kg)</span>
+              <input type="number" id="laWeight" min="0" step="0.1" placeholder="kg" />
+            </label>
+            <button class="btn primary align-end" id="laCalcBtn" data-i18n="actions.calculate">Calculate</button>
+          </div>
+          <div class="calc-result" id="laResult"></div>
+        </div>
+
+        <div class="calc-panel card" id="calc-endo">
+          <p class="muted" data-i18n="calc.endo_desc">Antibiotic prophylaxis for highest-risk cardiac patients</p>
+          <div class="endo-box">
+            <h4 data-i18n="calc.high_risk">High-risk cardiac conditions</h4>
+            <ul id="endoConditions"></ul>
+            <label class="check"><input type="checkbox" id="endoHighRisk" /> <span data-i18n="calc.is_high_risk">Is the patient high-risk?</span></label>
+            <label class="check"><input type="checkbox" id="endoIsChild" /> <span data-i18n="calc.child">Child</span></label>
+            <label class="field" id="endoWeightField" hidden>
+              <span data-i18n="calc.weight">Weight (kg)</span>
+              <input type="number" id="endoWeight" min="0" step="0.1" placeholder="kg" />
+            </label>
+          </div>
+          <div class="calc-result" id="endoResult"></div>
+        </div>
+
+        <div class="calc-panel card" id="calc-emergency">
+          <p class="muted" data-i18n="calc.emergency_desc">Quick reference for medical emergencies</p>
+          <div class="emergency-grid" id="emergencyGrid"></div>
+        </div>
+      </section>
+
+      <!-- ---------- INTERACTIONS ---------- -->
+      <section class="view" id="view-interactions">
+        <div class="view-head"><h2 data-i18n="interactions_ui.title">Drug Interaction Checker</h2></div>
+        <div class="card">
+          <p class="muted" data-i18n="interactions_ui.desc">Check interactions between selected drugs, patient allergies and current medications</p>
+          <div class="field">
+            <span data-i18n="interactions_ui.select_drugs">Select drugs to check</span>
+            <div class="tag-input">
+              <input type="text" id="interInput" list="drugListDl" placeholder="Type a drug name…" />
+              <button type="button" class="btn small" id="interAddBtn" data-i18n="actions.add">Add</button>
+            </div>
+            <div class="tag-list" id="interTags"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="interIncludeMeds" checked /> <span data-i18n="interactions_ui.add_current">Include current medications</span></label>
+          <button class="btn primary" id="interCheckBtn" data-i18n="actions.check">Check interactions</button>
+          <div class="inter-results" id="interResults"></div>
+        </div>
+      </section>
+
+      <!-- ---------- GUIDELINES ---------- -->
+      <section class="view" id="view-guidelines">
+        <div class="view-head"><h2 data-i18n="nav.guidelines">Guidelines</h2></div>
+        <div class="guideline-grid" id="guidelineGrid"></div>
+      </section>
+
+      <!-- ---------- HISTORY ---------- -->
+      <section class="view" id="view-history">
+        <div class="view-head">
+          <h2 data-i18n="history.title">Patient History</h2>
+          <button class="btn ghost danger" id="btnClearHistory" data-i18n="history.clear_all">Clear all</button>
+        </div>
+        <div class="card">
+          <p class="muted" data-i18n="history.privacy_note">Records are stored in your browser's local storage and never leave this device.</p>
+          <div id="historyList" class="history-list"></div>
+        </div>
+      </section>
+
+      <!-- ---------- ADMIN ---------- -->
+      <section class="view" id="view-admin">
+        <div class="view-head"><h2 data-i18n="admin.title">Admin Panel</h2></div>
+        <div class="card">
+          <p class="muted" data-i18n="admin.desc">Manage the drug database and Egyptian trade names</p>
+          <div class="admin-stats" id="adminStats"></div>
+          <div class="admin-actions">
+            <button class="btn primary" id="btnAddDrug">＋ <span data-i18n="admin.add_drug">Add new drug</span></button>
+            <button class="btn" id="btnExportDb" data-i18n="admin.export_db">Export database (JSON)</button>
+            <button class="btn" id="btnImportDb" data-i18n="admin.import_db">Import database (JSON)</button>
+            <input type="file" id="importFile" accept="application/json" hidden />
+            <button class="btn ghost danger" id="btnResetDb" data-i18n="admin.reset_db">Reset to default database</button>
+          </div>
+          <p class="admin-warn" data-i18n="admin.admin_warning">Changes are saved to this browser only. Export to keep a copy.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="admin.manage_egyptian">Manage Egyptian drug database</h3>
+          <div class="search-inline">
+            <input type="search" id="adminDrugSearch" data-i18n-ph="actions.search_placeholder" placeholder="Search drugs…" />
+          </div>
+          <div class="admin-drug-list" id="adminDrugList"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================== MODALS ===================== -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modalTitle">—</h3>
+        <button class="btn-icon" id="modalClose" data-i18n-title="actions.close" title="Close">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- ===================== PRESCRIPTION PANEL ===================== -->
+  <div class="rx-drawer" id="rxDrawer" hidden>
+    <div class="rx-drawer-head">
+      <h3 data-i18n="prescription.title">Prescription</h3>
+      <button class="btn-icon" id="rxClose"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="rx-drawer-body" id="rxBody"></div>
+    <div class="rx-drawer-foot">
+      <button class="btn" id="rxPrint" data-i18n="actions.print">Print</button>
+      <button class="btn primary" id="rxPdf" data-i18n="actions.export_pdf">Export PDF</button>
+    </div>
+  </div>
+
+  <!-- Floating prescription button -->
+  <button class="rx-fab" id="rxFab" hidden title="Prescription">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+    <span class="rx-badge" id="rxBadge">0</span>
+  </button>
+
+  <!-- datalist of drug names for inputs -->
+  <datalist id="drugListDl"></datalist>
+
+  <!-- toast -->
+  <div class="toast" id="toast" hidden></div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <!-- Embedded data fallback lets the app run by opening index.html directly (file://) -->
+  <script src="js/embedded-data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/calculators.js"></script>
+  <script src="js/interactions.js"></script>
+  <script src="js/prescription.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>
